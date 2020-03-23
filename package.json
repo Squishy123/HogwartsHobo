@@ -1,0 +1,34 @@
+{
+  "name": "hogwartshobo",
+  "version": "1.0.0",
+  "description": "Assignment for CPS406",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Squishy123/HogwartsHobo.git"
+  },
+  "author": "",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Squishy123/HogwartsHobo/issues"
+  },
+  "homepage": "https://github.com/Squishy123/HogwartsHobo#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2"
+  },
+  "scripts": {
+    "start": "node dist/main.js",
+    "dev": "nodemon --exec babel-node src/main.js",
+    "build": "babel src --out-dir dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^1.7.0",
+    "lowdb": "^1.0.0"
+  }
+}
