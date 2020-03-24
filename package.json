@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "node dist/main.js",
-    "dev": "nodemon --exec babel-node src/sim/track.js",
+    "dev": "nodemon --exec babel-node src/sim/sim.js",
     "build": "babel src --out-dir dist",
     "test": "jest"
   },

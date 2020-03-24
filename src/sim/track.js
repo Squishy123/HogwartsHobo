@@ -16,6 +16,7 @@ export default class Track {
     //train time on track and time between each train
     constructor(timeOnTrackDist, timeBetweenDist) {
         this.history = [];
+        this.recent = [];
         this.state = 0;
 
         this.timeOnTrackDist = timeOnTrackDist;
@@ -30,14 +31,15 @@ export default class Track {
             let timeBetween = weightedRand(this.timeBetweenDist);
 
             let stretch = [].concat(Array.from(Array(timeOnTrack), () => 1), Array.from(Array(timeBetween), () => 0))
-            console.log(stretch);
             generated = generated.concat(stretch);
         }
         this.history = this.history.concat(generated);
+        this.recent = generated;
         return generated;
     }
 }
 
+/*
 let track = new Track(genPoissDist(5), genPoissDist(5));
-track.generateTrains(1);
-//console.log(track.history);
+track.generateTrains(100);
+console.log(track.history);*/
