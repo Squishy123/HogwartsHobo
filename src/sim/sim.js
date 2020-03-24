@@ -60,9 +60,9 @@ class Game {
     //run in preloaded chunks
     run() {
         let hobo = new Hobo(10, 0);
-        let score = 0;
+        let score = 1;
         this.spawnNext();
-        for (let i = 1; i < 1000; i++) {
+        for (let i = 1; i < 1000; i++,score++) {
             console.log(chalk.blue("ROUND " + i))
             console.log(this.getInfo(i));
             if (this.getInfo(i)[hobo.pos] == 1) {
@@ -75,7 +75,6 @@ class Game {
             console.log(hobo.info);
             hobo.act();
             this.spawnNext();
-            score++;
         }
 
         console.log("FINAL SCORE " + score);
