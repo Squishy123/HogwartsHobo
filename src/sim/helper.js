@@ -31,7 +31,7 @@ export function weightedRand(dist) {
         }
     }
 
-    return rand;
+    return Number(rand);
 }
 
 //generate a distribution curve given lambda

@@ -38,11 +38,7 @@ class Game {
         }
 
         if(this.loopCount % TIME_STEP == 0) {
-            let numEvents = weightedRand(this.dist);
-            for(let i = 0; i < numEvents; i++) {
-                let spawnTime = weightedRand(this.trackDist[numEvents])
-                console.log(`GENERATING TRAIN #${i} at ${spawnTime}`)
-            }
+           
         }  
 
         //console.log(numEvents);
@@ -50,6 +46,6 @@ class Game {
     }
 }
 
-let game = new Game(5, 3, 4);
-game.start();
+//let game = new Game(5, 3, 4);
+//game.start();
 
