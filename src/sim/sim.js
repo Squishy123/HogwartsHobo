@@ -1,103 +1,21 @@
 const TIME_STEP = 60;
 
-function poiss(lambda, k) {
-    return Math.pow(Math.E, -lambda) * (Math.pow(lambda, k) / fact(k))
-}
-
-function fact(x) {
-    if (x <= 0) {
-        return 1;
-    }
-
-    return x * fact(x - 1);
-}
-
-function randInt(x) {
-    return Math.floor(Math.random() * Math.floor(x))
-}
-
-function weightedRand(dist) {
-    let sum = 0;
-    let r = Math.random();
-    let rand = 0;
-
-    for (let i = 0; i < Object.keys(dist).length; i++) {
-        sum+=dist[Object.keys(dist)[i]];
-        if(r <= sum) { 
-            rand = Object.keys(dist)[i];
-            break;
-        }
-    }
-
-    return rand;
-}
-
-//Main entry for sim goes here
-function sim(avgTimeBetweenTrains, avgTimeOnTracks, runtime) {
-    let lambda = avgTrains = TIME_STEP / (avgTimeBetweenTrains + avgTimeOnTracks);
-    let dist = {}
-
-    //generate distribution curve
-    for (let i = 0; i < 1000; i++) {
-        let p = poiss(lambda, i);
-        if (!p || (dist[0] && p < dist[0]))
-            break;
-        dist[i] = poiss(lambda, i);
-    }
-
-    for(let i = 0; i < runtime; i+=TIME_STEP) {
-        let numEvents = weightedRand(dist);
-        console.log(numEvents);
-    }
-}
-
-class Hobo {
-    constructor(hp, initialPos) {
-        this.hp = hp;
-        this.pos = initialPos;
-        this.info = [];
-    }
-
-    getInfo(trackInfo) {
-        this.info.push(trackInfo);
-        if (this.info.length > 2)
-            this.info.pop(0);
-    }
-
-    jump(pos) {
-        this.pos = pos;
-    }
-
-    act() {
-        //basic -> find an empty track jump to it
-        this.info[0].forEach((e, i) => {
-            if (e == 0) {
-                this.jump(i);
-            }
-        });
-    }
-}
-
-function genPoissDist(lambda) {
-    let dist = {}
-    for (let i = 0; i < 1000; i++) {
-        let p = poiss(lambda, i);
-        if (!p || (dist[0] && p < dist[0]))
-            break;
-        dist[i] = poiss(lambda, i);
-    }
-
-    return dist;
-}
-
 class Game {
     constructor(avgTimeBetweenTrains, avgTimeOnTracks, numTracks) {
         this.avgTimeBetweenTrains = avgTimeBetweenTrains;
         this.avgTimeOnTracks = avgTimeOnTracks;
         this.numTracks = numTracks;
+
         //generate all the stuff
         this.dist = genPoissDist(TIME_STEP / (avgTimeBetweenTrains + avgTimeOnTracks));
-        console.log("GENERATED DISTRIBUTION CURVE");
+        console.log(this.dist);
+
+        //generate all the track spawn dists
+        this.trackDist = {};
+        Object.keys(this.dist).forEach(k => {
+            this.trackDist[k] = genPoissDist(k);
+        });
+        console.log(this.trackDist);
 
         this.loopCount = 0;
         this.loopLimit = 10000;
@@ -121,7 +39,10 @@ class Game {
 
         if(this.loopCount % TIME_STEP == 0) {
             let numEvents = weightedRand(this.dist);
-            console.log("GENERATING TRAINS")
+            for(let i = 0; i < numEvents; i++) {
+                let spawnTime = weightedRand(this.trackDist[numEvents])
+                console.log(`GENERATING TRAIN #${i} at ${spawnTime}`)
+            }
         }  
 
         //console.log(numEvents);
@@ -129,6 +50,6 @@ class Game {
     }
 }
 
-let game = new Game(5, 4, 4);
+let game = new Game(5, 3, 4);
 game.start();
 
