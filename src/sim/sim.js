@@ -1,4 +1,5 @@
 import { genPoissDist, weightedRand } from "./helper";
+import chalk from "chalk";
 import Track from "./track";
 import Hobo from "./hobo";
 
@@ -62,14 +63,16 @@ class Game {
         let score = 0;
         this.spawnNext();
         for (let i = 1; i < 1000; i++) {
+            console.log(chalk.blue("ROUND " + i))
             console.log(this.getInfo(i));
             if (this.getInfo(i)[hobo.pos] == 1) {
                 hobo.hp--;
-                console.log("HIT HP: " + hobo.hp);
+                console.log(chalk.red("HIT HP: " + hobo.hp));
                 if (hobo.hp == 0)
                     break;
             }
-            hobo.getInfo(this.getInfo(i));
+            hobo.getInfo(this.getInfo(i-1));
+            console.log(hobo.info);
             hobo.act();
             this.spawnNext();
             score++;

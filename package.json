@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@tensorflow/tfjs": "^1.7.0",
+    "chalk": "^3.0.0",
     "lowdb": "^1.0.0"
   }
 }
