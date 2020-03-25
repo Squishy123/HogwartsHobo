@@ -12,18 +12,18 @@ export class Hobo {
         this.info.push(trackInfo);
         if (this.info.length > 2)
             this.info.shift();
-        console.log(this.info);
+        //console.log(this.info);
     }
 
     jump(pos) {
-        console.log(chalk.magenta("JUMPING TO " + pos))
+        //console.log(chalk.magenta("JUMPING TO " + pos))
         this.pos = pos;
     }
 
     act(info) {
         this.getInfo(info);
-        console.log(chalk.yellow("CURRENT POS " + this.pos));
-        console.log(chalk.yellow("CURRENT HP " + this.hp))
+        //console.log(chalk.yellow("CURRENT POS " + this.pos));
+        //console.log(chalk.yellow("CURRENT HP " + this.hp))
         //basic -> find an empty track jump to it
         if (this.info && this.info[1])
             for (let i = 0; i < this.info[1].length; i++) {
@@ -43,9 +43,11 @@ export class SmartHobo {
 
         this.expTimesOnTracks;
         this.avgTimesOnTracks;
+        this.avgTimesOnTracksTot;
 
         this.expTimesBetween;
         this.avgTimesBetween;
+        this.avgTimesBetweenTot;
 
         this.safety;
     }
@@ -59,9 +61,15 @@ export class SmartHobo {
         if (this.info && this.info[1]) {
             for (let i = 0; i < this.safety.length; i++) {
                 if (this.info[1][i] == 0) { //track is empty
-                    this.safety[i] = 1 - poiss(this.expTimesBetween[i], this.avgTimesBetween[i]);
+                    if (this.avgTimesBetweenTot[i] == 0)
+                        this.safety[i] = 1;
+                    else
+                        this.safety[i] = 1 - poiss(this.expTimesBetween[i], this.avgTimesBetween[i] / this.avgTimesBetweenTot[i]);
                 } else {
-                    this.safety[i] = poiss(this.expTimesOnTracks[i], this.avgTimesOnTracks[i]);
+                    if (this.avgTimesOnTracksTot[i] == 0)
+                        this.safety[i] = 1;
+                    else 
+                        this.safety[i] = poiss(this.expTimesOnTracks[i], this.avgTimesOnTracks[i] / this.avgTimesOnTracksTot[i]);
                 }
             }
         }
@@ -81,6 +89,10 @@ export class SmartHobo {
                 this.avgTimesOnTracks = Array.from(Array(trackInfo.length), () => 0);
             }
 
+            if (!this.avgTimesOnTracksTot) {
+                this.avgTimesOnTracksTot = Array.from(Array(trackInfo.length), () => 0);
+            }
+
             if (!this.expTimesBetween) {
                 this.expTimesBetween = Array.from(Array(trackInfo.length), () => 0);
             }
@@ -89,20 +101,23 @@ export class SmartHobo {
                 this.avgTimesBetween = Array.from(Array(trackInfo.length), () => 0);
             }
 
+            if (!this.avgTimesBetweenTot) {
+                this.avgTimesBetweenTot = Array.from(Array(trackInfo.length), () => 0);
+            }
+
+
             //check if state changed
             for (let i = 0; i < this.info[0].length; i++) {
                 //check if states changed
                 if (this.info[0][i] != this.info[1][i]) {
-                    console.log("STATE CHANGE")
+                    //console.log("STATE CHANGE")
                     if (this.info[1][i] == 0) { //if 1 -> 0
-                        if (!this.avgTimesOnTracks[i])
-                            this.avgTimesOnTracks[i] = [];
-                        this.avgTimesOnTracks[i] = (this.avgTimesOnTracks[i] + this.expTimesOnTracks[i]) / 2;
+                        this.avgTimesOnTracks[i] += this.expTimesOnTracks[i];
+                        this.avgTimesOnTracksTot[i]++;
                         this.expTimesOnTracks[i] = 0;
                     } else { //if 0 -> 1
-                        if (!this.avgTimesBetween[i])
-                            this.avgTimesBetween[i] = [];
-                        this.avgTimesBetween[i] = (this.avgTimesBetween[i] + this.expTimesBetween[i]) / 2;
+                        this.avgTimesBetween[i] += this.expTimesBetween[i];
+                        this.avgTimesBetweenTot[i]++;
                         this.expTimesBetween[i] = 0;
                     }
                 } else {
@@ -113,24 +128,31 @@ export class SmartHobo {
                     }
                 }
             }
+            //console.log("TIMES ON TRACKS")
+            //console.log(this.expTimesOnTracks);
+            //console.log(this.avgTimesOnTracks);
+            //console.log("TIMES BETWEEN")
+            //console.log(this.expTimesBetween);
+            //console.log(this.avgTimesBetween);
             this.computeSafety();
-            console.log(this.safety);
+            //console.log("SAFETY")
+            //console.log(this.safety);
         }
     }
 
     jump(pos) {
-        console.log(chalk.magenta("JUMPING TO " + pos))
+        //console.log(chalk.magenta("JUMPING TO " + pos))
         this.pos = pos;
     }
 
     act(info) {
         this.getInfo(info);
-        console.log(chalk.yellow("CURRENT POS " + this.pos));
-        console.log(chalk.yellow("CURRENT HP " + this.hp))
+        //console.log(chalk.yellow("CURRENT POS " + this.pos));
+        //console.log(chalk.yellow("CURRENT HP " + this.hp))
 
         if (this.safety) {
-            console.log("USING SAFETY FIRST");
-            if(this.safety[0] > this.safety[1]) {
+            //console.log("USING SAFETY FIRST");
+            if (this.safety[0] > this.safety[1]) {
                 this.jump(0);
             } else {
                 this.jump(1);
