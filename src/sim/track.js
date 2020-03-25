@@ -38,8 +38,3 @@ export default class Track {
         return generated;
     }
 }
-
-/*
-let track = new Track(genPoissDist(5), genPoissDist(5));
-track.generateTrains(100);
-console.log(track.history);*/

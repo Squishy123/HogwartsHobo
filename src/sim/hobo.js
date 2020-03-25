@@ -1,6 +1,7 @@
 import chalk from "chalk";
+import { poiss } from "./helper";
 
-export default class Hobo {
+export class Hobo {
     constructor(hp, initialPos) {
         this.hp = hp;
         this.pos = initialPos;
@@ -11,6 +12,7 @@ export default class Hobo {
         this.info.push(trackInfo);
         if (this.info.length > 2)
             this.info.shift();
+        console.log(this.info);
     }
 
     jump(pos) {
@@ -18,7 +20,8 @@ export default class Hobo {
         this.pos = pos;
     }
 
-    act() {
+    act(info) {
+        this.getInfo(info);
         console.log(chalk.yellow("CURRENT POS " + this.pos));
         console.log(chalk.yellow("CURRENT HP " + this.hp))
         //basic -> find an empty track jump to it
@@ -29,5 +32,118 @@ export default class Hobo {
                     break;
                 }
             }
+    }
+}
+
+export class SmartHobo {
+    constructor(hp, initialPos) {
+        this.hp = hp;
+        this.pos = initialPos;
+        this.info = [];
+
+        this.expTimesOnTracks;
+        this.avgTimesOnTracks;
+
+        this.expTimesBetween;
+        this.avgTimesBetween;
+
+        this.safety;
+    }
+
+    computeSafety() {
+        //init
+        if (!this.safety) {
+            this.safety = Array.from(Array(this.info[0].length), () => 0);
+        }
+
+        if (this.info && this.info[1]) {
+            for (let i = 0; i < this.safety.length; i++) {
+                if (this.info[1][i] == 0) { //track is empty
+                    this.safety[i] = 1 - poiss(this.expTimesBetween[i], this.avgTimesBetween[i]);
+                } else {
+                    this.safety[i] = poiss(this.expTimesOnTracks[i], this.avgTimesOnTracks[i]);
+                }
+            }
+        }
+    }
+
+    getInfo(trackInfo) {
+        this.info.push(trackInfo);
+        if (this.info.length > 2) {
+            this.info.shift();
+
+            //init 
+            if (!this.expTimesOnTracks) {
+                this.expTimesOnTracks = Array.from(Array(trackInfo.length), () => 0);
+            }
+
+            if (!this.avgTimesOnTracks) {
+                this.avgTimesOnTracks = Array.from(Array(trackInfo.length), () => 0);
+            }
+
+            if (!this.expTimesBetween) {
+                this.expTimesBetween = Array.from(Array(trackInfo.length), () => 0);
+            }
+
+            if (!this.avgTimesBetween) {
+                this.avgTimesBetween = Array.from(Array(trackInfo.length), () => 0);
+            }
+
+            //check if state changed
+            for (let i = 0; i < this.info[0].length; i++) {
+                //check if states changed
+                if (this.info[0][i] != this.info[1][i]) {
+                    console.log("STATE CHANGE")
+                    if (this.info[1][i] == 0) { //if 1 -> 0
+                        if (!this.avgTimesOnTracks[i])
+                            this.avgTimesOnTracks[i] = [];
+                        this.avgTimesOnTracks[i] = (this.avgTimesOnTracks[i] + this.expTimesOnTracks[i]) / 2;
+                        this.expTimesOnTracks[i] = 0;
+                    } else { //if 0 -> 1
+                        if (!this.avgTimesBetween[i])
+                            this.avgTimesBetween[i] = [];
+                        this.avgTimesBetween[i] = (this.avgTimesBetween[i] + this.expTimesBetween[i]) / 2;
+                        this.expTimesBetween[i] = 0;
+                    }
+                } else {
+                    if (this.info[1][i] == 0) {
+                        this.expTimesBetween[i]++;
+                    } else {
+                        this.expTimesOnTracks[i]++;
+                    }
+                }
+            }
+            this.computeSafety();
+            console.log(this.safety);
+        }
+    }
+
+    jump(pos) {
+        console.log(chalk.magenta("JUMPING TO " + pos))
+        this.pos = pos;
+    }
+
+    act(info) {
+        this.getInfo(info);
+        console.log(chalk.yellow("CURRENT POS " + this.pos));
+        console.log(chalk.yellow("CURRENT HP " + this.hp))
+
+        if (this.safety) {
+            console.log("USING SAFETY FIRST");
+            if(this.safety[0] > this.safety[1]) {
+                this.jump(0);
+            } else {
+                this.jump(1);
+            }
+        } else {
+            //basic -> find an empty track jump to it
+            if (this.info && this.info[1])
+                for (let i = 0; i < this.info[1].length; i++) {
+                    if (this.info[1][i] == 0) {
+                        this.jump(i);
+                        break;
+                    }
+                }
+        }
     }
 }

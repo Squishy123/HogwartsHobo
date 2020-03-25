@@ -1,7 +1,7 @@
 import { genPoissDist, weightedRand } from "./helper";
 import chalk from "chalk";
 import Track from "./track";
-import Hobo from "./hobo";
+import {Hobo, SmartHobo} from "./hobo";
 
 class Game {
     constructor(timeStep, avgTimeOnTrack, avgTimeBetween, numTracks) {
@@ -59,28 +59,33 @@ class Game {
 
     //run in preloaded chunks
     run() {
-        let hobo = new Hobo(10, 0);
+        let hobo = new SmartHobo(500, 0);
         let score = 1;
         this.spawnNext();
         for (let i = 1; i < 1000; i++,score++) {
             console.log(chalk.blue("ROUND " + i))
+            console.log("TRACK STATUS")
+            console.log(this.getInfo(i-1));
             console.log(this.getInfo(i));
+            console.log("=========")
             if (this.getInfo(i)[hobo.pos] == 1) {
                 hobo.hp--;
                 console.log(chalk.red("HIT HP: " + hobo.hp));
                 if (hobo.hp == 0)
                     break;
             }
-            hobo.getInfo(this.getInfo(i-1));
-            console.log(hobo.info);
-            hobo.act();
+            hobo.act(this.getInfo(i-1));
             this.spawnNext();
         }
 
         console.log("FINAL SCORE " + score);
+        let computedAvgTimeOnTrack = hobo.avgTimesOnTracks.reduce((a, c)=>a+c,0)/hobo.avgTimesOnTracks.length;
+        let computedAvgTimesBetween = hobo.avgTimesBetween.reduce((a, c)=>a+c,0)/hobo.avgTimesBetween.length;
+        console.log(computedAvgTimeOnTrack)
+        console.log(computedAvgTimesBetween);
     }
 }
 
-let game = new Game(60, 6, 5, 2);
+let game = new Game(60, 5, 3, 2);
 game.run();
 
