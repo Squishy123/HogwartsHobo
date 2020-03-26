@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { poiss } from "./helper";
+import { poissSum } from "./helper";
 
 export class Hobo {
     constructor(hp, initialPos) {
@@ -63,13 +63,13 @@ export class SmartHobo {
                 if (this.info[1][i] == 0) { //track is empty
                     if (this.avgTimesBetweenTot[i] == 0)
                         this.safety[i] = 1;
-                    else
-                        this.safety[i] = 1 - poiss(this.expTimesBetween[i], this.avgTimesBetween[i] / this.avgTimesBetweenTot[i]);
+                    else 
+                        this.safety[i] = 1 - poissSum(this.expTimesBetween[i], this.avgTimesBetween[i] / this.avgTimesBetweenTot[i]);
                 } else {
                     if (this.avgTimesOnTracksTot[i] == 0)
                         this.safety[i] = 1;
                     else 
-                        this.safety[i] = poiss(this.expTimesOnTracks[i], this.avgTimesOnTracks[i] / this.avgTimesOnTracksTot[i]);
+                        this.safety[i] = poissSum(this.expTimesOnTracks[i], this.avgTimesOnTracks[i] / this.avgTimesOnTracksTot[i]);
                 }
             }
         }

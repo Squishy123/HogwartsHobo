@@ -59,43 +59,7 @@ class Game {
 
     //run in preloaded chunks
     runSmart() {
-        let hobo = new SmartHobo(1000, 0);
-        let score = 1;
-        this.spawnNext();
-        for (let i = 1; i < 10000; i++,score++) {
-            //console.log(chalk.blue("ROUND " + i))
-            //console.log("TRACK STATUS")
-            //console.log(this.getInfo(i-1));
-            //console.log(this.getInfo(i));
-            //console.log("=========")
-            if (this.getInfo(i)[hobo.pos] == 1) {
-                hobo.hp--;
-                //console.log(chalk.red("HIT HP: " + hobo.hp));
-                if (hobo.hp == 0)
-                    break;
-            }
-            hobo.act(this.getInfo(i-1));
-            this.spawnNext();
-        }
-
-        //console.log("FINAL SCORE " + score);
-        let computedAvgTimeOnTrack = 0;
-        for(let i = 0; i < hobo.avgTimesOnTracks.length; i++) {
-            computedAvgTimeOnTrack+=hobo.avgTimesOnTracks[i]/hobo.avgTimesOnTracksTot[i];
-        }
-        computedAvgTimeOnTrack/=hobo.avgTimesOnTracks.length;
-      
-        let computedAvgTimesBetween = 0;
-        for(let i = 0; i < hobo.avgTimesBetween.length; i++) {
-            computedAvgTimesBetween+=hobo.avgTimesBetween[i]/hobo.avgTimesBetweenTot[i];
-        }
-        computedAvgTimesBetween/=hobo.avgTimesBetween.length;
-
-        return [computedAvgTimeOnTrack, computedAvgTimesBetween];
-    }
-
-    runBasic() {
-        let hobo = new Hobo(20, 0);
+        let hobo = new SmartHobo(100, 0);
         let score = 1;
         this.spawnNext();
         for (let i = 1; i < 1000; i++,score++) {
@@ -114,7 +78,44 @@ class Game {
             this.spawnNext();
         }
 
-        //console.log("FINAL SCORE " + score);
+        console.log("FINAL SCORE " + score);
+        let computedAvgTimeOnTrack = 0;
+        for(let i = 0; i < hobo.avgTimesOnTracks.length; i++) {
+            computedAvgTimeOnTrack+=hobo.avgTimesOnTracks[i]/hobo.avgTimesOnTracksTot[i];
+        }
+        computedAvgTimeOnTrack/=hobo.avgTimesOnTracks.length;
+      
+        let computedAvgTimesBetween = 0;
+        for(let i = 0; i < hobo.avgTimesBetween.length; i++) {
+            computedAvgTimesBetween+=hobo.avgTimesBetween[i]/hobo.avgTimesBetweenTot[i];
+        }
+        computedAvgTimesBetween/=hobo.avgTimesBetween.length;
+
+        return [computedAvgTimeOnTrack, computedAvgTimesBetween, score];
+    }
+
+    runBasic() {
+        let hobo = new Hobo(100, 0);
+        let score = 1;
+        this.spawnNext();
+        for (let i = 1; i < 1000; i++,score++) {
+            //console.log(chalk.blue("ROUND " + i))
+            //console.log("TRACK STATUS")
+            //console.log(this.getInfo(i-1));
+            //console.log(this.getInfo(i));
+            //console.log("=========")
+            if (this.getInfo(i)[hobo.pos] == 1) {
+                hobo.hp--;
+                //console.log(chalk.red("HIT HP: " + hobo.hp));
+                if (hobo.hp == 0)
+                    break;
+            }
+            hobo.act(this.getInfo(i-1));
+            this.spawnNext();
+        }
+
+        console.log("FINAL SCORE " + score);
+        return [1, 1, score];
     }
 }
 
@@ -122,14 +123,15 @@ let totalAvgs = [];
 let numAvgs = 10;
 for(let i = 0; i < numAvgs; i++) {
     console.log(`${i}/${numAvgs}`);
-    let game = new Game(60, 5, 3, 5);
-    totalAvgs.push(game.runSmart());
+    let game = new Game(60, 2, 2, 5);
+    totalAvgs.push(game.runBasic());
 }
 ////console.log(totalAvgs);
 
-totalAvgs = totalAvgs.reduce((a, c) => [a[0]+c[0], a[1]+c[1]], [0, 0]);
+totalAvgs = totalAvgs.reduce((a, c) => [a[0]+c[0], a[1]+c[1], a[2]+c[2]], [0, 0, 0]);
 totalAvgs[0]/=numAvgs;
 totalAvgs[1]/=numAvgs;
+totalAvgs[2]/=numAvgs;
 console.log(totalAvgs);
 
 
