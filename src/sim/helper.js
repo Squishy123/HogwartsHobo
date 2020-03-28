@@ -46,3 +46,20 @@ export function genPoissDist(lambda) {
 
     return dist;
 }
+
+//total up all poisson values gt - eq than limiter
+export function poissSum(lambda, limiter) {
+    let dist = {}
+    let sum = 0;
+    for (let i = 0; i < 1000; i++) {
+        let p = poiss(lambda, i);
+        if (!p || (dist[0] && p < dist[0]))
+            break;
+        dist[i] = poiss(lambda, i);
+        if(i >= limiter) {
+            sum+=dist[i];
+        }
+    }
+
+    return sum;
+}
