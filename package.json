@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.9.0",
     "babel-loader": "^8.1.0",
     "eslint": "^6.8.0",
+    "gh-pages": "^2.2.0",
     "html-webpack-plugin": "^4.0.4",
     "jest": "^25.2.0",
     "nodemon": "^2.0.2",
@@ -32,7 +33,8 @@
     "dev": "webpack-dev-server --config webpack.config.js --hot",
     "build-webpack": "webpack --config webpack.config.js",
     "build": "babel src --out-dir dist",
-    "test": "jest"
+    "test": "jest",
+    "deploy": "npm run build-webpack && gh-pages -d dep -b gh-pages"
   },
   "dependencies": {
     "@tensorflow/tfjs": "^1.7.0",

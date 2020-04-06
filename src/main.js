@@ -2,14 +2,18 @@
 import Chart from 'chart.js';
 import Game from './sim/sim';
 
-let ctx = document.querySelector('#graph');
+let sctx = document.querySelector('#smart-graph');
+let bctx = document.querySelector('#basic-graph');
 let start = document.querySelector('button');
 
-let graph;
+let smartGraph, basicGraph;
 
 start.addEventListener('click', () => {
-    if(graph)
-        graph.destroy();
+    if(smartGraph)
+        smartGraph.destroy();
+
+    if(basicGraph)
+        basicGraph.destroy();
 
     startSimulation(Number(document.querySelector('#avg-time-on').value), 
     Number(document.querySelector('#avg-time-between').value), 
@@ -19,41 +23,39 @@ start.addEventListener('click', () => {
 function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks) {
     console.log(numTracks);
     let game = new Game(60, avgTimeOnTrack, avgTimesBetween, numTracks);
-    let results = game.runSmart();
+    let smartResults = game.runSmart();
+    let basicResults = game.runBasic();
+
+    document.querySelector('#basic-score').innerHTML = `Basic Hobo Final Score: ${basicResults.score}`;
+    document.querySelector('#smart-score').innerHTML = `Smart Hobo Final Score: ${smartResults.score}`;
 
     let trainPos = [];
 
-    for (let i = 0; i < results.trackPos.length; i++) {
-        for (let j = 0; j < results.trackPos[i].length; j++) {
+    for (let i = 0; i < smartResults.trackPos.length; i++) {
+        for (let j = 0; j < smartResults.trackPos[i].length; j++) {
             if (!trainPos[j])
                 trainPos.push([]);
 
-            if (results.trackPos[i][j].y == 1)
-                trainPos[j].push({ x: results.trackPos[i][j].x, y: j });
+            if (smartResults.trackPos[i][j].y == 1)
+                trainPos[j].push({ x: smartResults.trackPos[i][j].x, y: j });
         }
     }
 
     console.log(trainPos);
 
-    console.log(trainPos.map((tp, i) => ({
-        label: `Track ${i}`,
-        backgroundColor: "green",
-        data: tp
-    })))
-
-    graph = new Chart(ctx, {
+    basicGraph = new Chart(bctx, {
         type: "scatter",
         data: {
             datasets: [
                 /*{
                     label: "Hits",
                     backgroundColor: 'rgb(255, 99, 132)',
-                    data: results.hits
+                    data: smartResults.hits
                 },*/
                 {
-                    label: "Hobo Position",
+                    label: "Basic Hobo Position",
                     backgroundColor: 'rgba(245, 66, 164, 0.7)',
-                    data: results.hoboPos,
+                    data: basicResults.hoboPos,
                     pointRadius: 7
                 },
                 ...trainPos.map((tp, i) => ({
@@ -76,6 +78,43 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks) {
             }
         }
     });
+
+    smartGraph = new Chart(sctx, {
+        type: "scatter",
+        data: {
+            datasets: [
+                /*{
+                    label: "Hits",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    data: smartResults.hits
+                },*/
+                {
+                    label: "Smart Hobo Position",
+                    backgroundColor: 'rgba(245, 66, 164, 0.7)',
+                    data: smartResults.hoboPos,
+                    pointRadius: 7
+                },
+                ...trainPos.map((tp, i) => ({
+                    label: `Track ${i}`,
+                    backgroundColor: "rgb(66, 245, 167)",
+                    data: tp,
+                    pointRadius: 10
+                })),
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: numTracks,
+                        stepSize: 1
+                    }
+                }]
+            }
+        }
+    });
+    
 }
 
 

@@ -7,12 +7,19 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        canvas {
+            max-width: 1000px;
+            margin: auto;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container mt-5">
         <h1 class="row">Hogwarts Hobo Simulation</h1>
-        <div class="settings row input-group">
+        <div class="settings row input-group mb-5">
             <div class="input-group mb-3">
                 <span class="input-group-text">Number of Tracks</span>
                 <input type="number" id="num-tracks" min="1" max="10" value="2">
@@ -30,9 +37,23 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-        <canvas id="graph"></canvas>
-        <div class="tracks"></div>
+    <div class="container-fluid mb-5">
+        <div class="row text-center">
+            <div class="col">
+                <canvas id="basic-graph"></canvas>
+            </div>
+            <div class="col">
+                <h3 id="basic-score"></h3>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col">
+                <canvas id="smart-graph"></canvas>
+            </div>
+            <div class="col">
+                <h3 id="smart-score"></h3>
+            </div>
+        </div>
     </div>
 </body>
 

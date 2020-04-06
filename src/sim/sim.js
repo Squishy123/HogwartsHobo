@@ -102,26 +102,32 @@ export default class Game {
     }
 
     runBasic() {
+        let hoboPos = [];
+        let trackPos = [];
+        let hits = [];
+
         let hobo = new Hobo(100, 0);
         let score = 1;
         this.spawnNext();
         for (let i = 1; i < 1000; i++, score++) {
-            //console.log(chalk.blue("ROUND " + i))
-            //console.log("TRACK STATUS")
-            //console.log(this.getInfo(i-1));
-            //console.log(this.getInfo(i));
-            //console.log("=========")
+            trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
+                hits.push({ x: i, y: 1 });
                 hobo.hp--;
-                //console.log(chalk.red("HIT HP: " + hobo.hp));
                 if (hobo.hp == 0)
                     break;
             }
             hobo.act(this.getInfo(i - 1));
+            hoboPos.push({ x: i, y: hobo.pos });
             this.spawnNext();
         }
 
         console.log("FINAL SCORE " + score);
-        return [1, 1, score];
+        return {
+            score: score,
+            hoboPos: hoboPos,
+            trackPos: trackPos,
+            hits: hits
+        };
     }
 }
