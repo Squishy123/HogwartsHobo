@@ -136,12 +136,12 @@ export class SmartHobo {
             //console.log(this.avgTimesBetween);
             this.computeSafety();
             //console.log("SAFETY")
-            //console.log(this.safety);
+            console.log(this.safety);
         }
     }
 
     jump(pos) {
-        //console.log(chalk.magenta("JUMPING TO " + pos))
+        console.log(chalk.magenta("JUMPING TO " + pos))
         this.pos = pos;
     }
 
@@ -152,11 +152,17 @@ export class SmartHobo {
 
         if (this.safety) {
             //console.log("USING SAFETY FIRST");
-            if (this.safety[0] > this.safety[1]) {
-                this.jump(0);
-            } else {
-                this.jump(1);
+            let min = this.safety[0];
+            let minIndex = 0;
+            for(let i = 1; i < this.safety.length; i++) {
+                if(this.safety[i] < min) {
+                    min = this.safety[i];
+                    minIndex = i;
+                }
             }
+
+            this.jump(minIndex);
+
         } else {
             //basic -> find an empty track jump to it
             if (this.info && this.info[1])

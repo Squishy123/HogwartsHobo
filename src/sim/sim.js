@@ -1,9 +1,8 @@
 import { genPoissDist, weightedRand } from "./helper";
-import chalk from "chalk";
 import Track from "./track";
-import {Hobo, SmartHobo} from "./hobo";
+import { Hobo, SmartHobo } from "./hobo";
 
-class Game {
+export default class Game {
     constructor(timeStep, avgTimeOnTrack, avgTimeBetween, numTracks) {
         //props
         this.timeStep = timeStep;
@@ -59,46 +58,54 @@ class Game {
 
     //run in preloaded chunks
     runSmart() {
+        let hoboPos = [];
+        let trackPos = [];
+        let hits = [];
+
         let hobo = new SmartHobo(100, 0);
         let score = 1;
         this.spawnNext();
-        for (let i = 1; i < 1000; i++,score++) {
-            //console.log(chalk.blue("ROUND " + i))
-            //console.log("TRACK STATUS")
-            //console.log(this.getInfo(i-1));
-            //console.log(this.getInfo(i));
-            //console.log("=========")
+        for (let i = 1; i < 1000; i++, score++) {
+            trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
+                hits.push({ x: i, y: 1 });
                 hobo.hp--;
-                //console.log(chalk.red("HIT HP: " + hobo.hp));
                 if (hobo.hp == 0)
                     break;
             }
-            hobo.act(this.getInfo(i-1));
+            hobo.act(this.getInfo(i - 1));
+            hoboPos.push({ x: i, y: hobo.pos });
             this.spawnNext();
         }
 
         console.log("FINAL SCORE " + score);
         let computedAvgTimeOnTrack = 0;
-        for(let i = 0; i < hobo.avgTimesOnTracks.length; i++) {
-            computedAvgTimeOnTrack+=hobo.avgTimesOnTracks[i]/hobo.avgTimesOnTracksTot[i];
+        for (let i = 0; i < hobo.avgTimesOnTracks.length; i++) {
+            computedAvgTimeOnTrack += hobo.avgTimesOnTracks[i] / hobo.avgTimesOnTracksTot[i];
         }
-        computedAvgTimeOnTrack/=hobo.avgTimesOnTracks.length;
-      
-        let computedAvgTimesBetween = 0;
-        for(let i = 0; i < hobo.avgTimesBetween.length; i++) {
-            computedAvgTimesBetween+=hobo.avgTimesBetween[i]/hobo.avgTimesBetweenTot[i];
-        }
-        computedAvgTimesBetween/=hobo.avgTimesBetween.length;
+        computedAvgTimeOnTrack /= hobo.avgTimesOnTracks.length;
 
-        return [computedAvgTimeOnTrack, computedAvgTimesBetween, score];
+        let computedAvgTimesBetween = 0;
+        for (let i = 0; i < hobo.avgTimesBetween.length; i++) {
+            computedAvgTimesBetween += hobo.avgTimesBetween[i] / hobo.avgTimesBetweenTot[i];
+        }
+        computedAvgTimesBetween /= hobo.avgTimesBetween.length;
+
+        return {
+            computedAvgTimeOnTrack: computedAvgTimeOnTrack,
+            computedAvgTimesBetween: computedAvgTimesBetween,
+            score: score,
+            hoboPos: hoboPos,
+            trackPos: trackPos,
+            hits: hits
+        };
     }
 
     runBasic() {
         let hobo = new Hobo(100, 0);
         let score = 1;
         this.spawnNext();
-        for (let i = 1; i < 1000; i++,score++) {
+        for (let i = 1; i < 1000; i++, score++) {
             //console.log(chalk.blue("ROUND " + i))
             //console.log("TRACK STATUS")
             //console.log(this.getInfo(i-1));
@@ -110,7 +117,7 @@ class Game {
                 if (hobo.hp == 0)
                     break;
             }
-            hobo.act(this.getInfo(i-1));
+            hobo.act(this.getInfo(i - 1));
             this.spawnNext();
         }
 
@@ -118,20 +125,3 @@ class Game {
         return [1, 1, score];
     }
 }
-
-let totalAvgs = [];
-let numAvgs = 10;
-for(let i = 0; i < numAvgs; i++) {
-    console.log(`${i}/${numAvgs}`);
-    let game = new Game(60, 2, 2, 5);
-    totalAvgs.push(game.runBasic());
-}
-////console.log(totalAvgs);
-
-totalAvgs = totalAvgs.reduce((a, c) => [a[0]+c[0], a[1]+c[1], a[2]+c[2]], [0, 0, 0]);
-totalAvgs[0]/=numAvgs;
-totalAvgs[1]/=numAvgs;
-totalAvgs[2]/=numAvgs;
-console.log(totalAvgs);
-
-
