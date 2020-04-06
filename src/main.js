@@ -9,39 +9,50 @@ let start = document.querySelector('button');
 let smartGraph, basicGraph;
 
 start.addEventListener('click', () => {
-    if(smartGraph)
+    if (smartGraph)
         smartGraph.destroy();
 
-    if(basicGraph)
+    if (basicGraph)
         basicGraph.destroy();
 
-    startSimulation(Number(document.querySelector('#avg-time-on').value), 
-    Number(document.querySelector('#avg-time-between').value), 
-    Number(document.querySelector('#num-tracks').value));
+    startSimulation(Number(document.querySelector('#avg-time-on').value),
+        Number(document.querySelector('#avg-time-between').value),
+        Number(document.querySelector('#num-tracks').value),
+        Number(document.querySelector('#hobohp').value),
+        Number(document.querySelector('#num-rounds').value));
 })
 
-function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks) {
+function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, numRounds) {
     console.log(numTracks);
-    let game = new Game(60, avgTimeOnTrack, avgTimesBetween, numTracks);
-    let smartResults = game.runSmart();
-    let basicResults = game.runBasic();
+    let smartResults = new Game(60, avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, numRounds).runSmart();
+    let basicResults = new Game(60, avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, numRounds).runBasic();
 
     document.querySelector('#basic-score').innerHTML = `Basic Hobo Final Score: ${basicResults.score}`;
     document.querySelector('#smart-score').innerHTML = `Smart Hobo Final Score: ${smartResults.score}`;
 
-    let trainPos = [];
+    let smartTrainPos = [];
+    let basicTrainPos = [];
 
     for (let i = 0; i < smartResults.trackPos.length; i++) {
         for (let j = 0; j < smartResults.trackPos[i].length; j++) {
-            if (!trainPos[j])
-                trainPos.push([]);
+            if (!smartTrainPos[j])
+                smartTrainPos.push([]);
 
             if (smartResults.trackPos[i][j].y == 1)
-                trainPos[j].push({ x: smartResults.trackPos[i][j].x, y: j });
+                smartTrainPos[j].push({ x: smartResults.trackPos[i][j].x, y: j });
         }
     }
 
-    console.log(trainPos);
+    for (let i = 0; i < basicResults.trackPos.length; i++) {
+        for (let j = 0; j < basicResults.trackPos[i].length; j++) {
+            if (!basicTrainPos[j])
+                basicTrainPos.push([]);
+
+            if (basicResults.trackPos[i][j].y == 1)
+                basicTrainPos[j].push({ x: basicResults.trackPos[i][j].x, y: j });
+        }
+    }
+
 
     basicGraph = new Chart(bctx, {
         type: "scatter",
@@ -58,7 +69,7 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks) {
                     data: basicResults.hoboPos,
                     pointRadius: 7
                 },
-                ...trainPos.map((tp, i) => ({
+                ...basicTrainPos.map((tp, i) => ({
                     label: `Track ${i}`,
                     backgroundColor: "rgb(66, 245, 167)",
                     data: tp,
@@ -72,6 +83,12 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks) {
                     ticks: {
                         suggestedMin: 0,
                         suggestedMax: numTracks,
+                        stepSize: 1
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        suggestedMax: Math.max(basicResults.score, smartResults.score),
                         stepSize: 1
                     }
                 }]
@@ -94,7 +111,7 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks) {
                     data: smartResults.hoboPos,
                     pointRadius: 7
                 },
-                ...trainPos.map((tp, i) => ({
+                ...smartTrainPos.map((tp, i) => ({
                     label: `Track ${i}`,
                     backgroundColor: "rgb(66, 245, 167)",
                     data: tp,
@@ -110,11 +127,17 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks) {
                         suggestedMax: numTracks,
                         stepSize: 1
                     }
+                }],
+                xAxes: [{
+                    ticks: {
+                        suggestedMax: Math.max(basicResults.score, smartResults.score),
+                        stepSize: 1
+                    }
                 }]
             }
         }
     });
-    
+
 }
 
 

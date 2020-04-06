@@ -3,11 +3,15 @@ import Track from "./track";
 import { Hobo, SmartHobo } from "./hobo";
 
 export default class Game {
-    constructor(timeStep, avgTimeOnTrack, avgTimeBetween, numTracks) {
+    constructor(timeStep, avgTimeOnTrack, avgTimeBetween, numTracks, hoboHP, numRounds) {
         //props
         this.timeStep = timeStep;
         this.avgTimeOnTrack = avgTimeOnTrack;
         this.avgTimeBetween = avgTimeBetween;
+        this.hoboHP = hoboHP;
+        this.numRounds = numRounds;
+
+        console.log(this);
 
         //generate distributions
         this.spawnDist = genPoissDist(timeStep / (avgTimeOnTrack + avgTimeBetween)); //number of events within the time step
@@ -62,10 +66,10 @@ export default class Game {
         let trackPos = [];
         let hits = [];
 
-        let hobo = new SmartHobo(100, 0);
+        let hobo = new SmartHobo(this.hoboHP, 0);
         let score = 1;
         this.spawnNext();
-        for (let i = 1; i < 1000; i++, score++) {
+        for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
                 hits.push({ x: i, y: 1 });
@@ -78,7 +82,6 @@ export default class Game {
             this.spawnNext();
         }
 
-        console.log("FINAL SCORE " + score);
         let computedAvgTimeOnTrack = 0;
         for (let i = 0; i < hobo.avgTimesOnTracks.length; i++) {
             computedAvgTimeOnTrack += hobo.avgTimesOnTracks[i] / hobo.avgTimesOnTracksTot[i];
@@ -106,10 +109,10 @@ export default class Game {
         let trackPos = [];
         let hits = [];
 
-        let hobo = new Hobo(100, 0);
+        let hobo = new Hobo(this.hoboHP, 0);
         let score = 1;
         this.spawnNext();
-        for (let i = 1; i < 1000; i++, score++) {
+        for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
                 hits.push({ x: i, y: 1 });
@@ -122,7 +125,6 @@ export default class Game {
             this.spawnNext();
         }
 
-        console.log("FINAL SCORE " + score);
         return {
             score: score,
             hoboPos: hoboPos,
