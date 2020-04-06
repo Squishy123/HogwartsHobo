@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hogwarts Hobo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="row">Hogwarts Hobo Simulation</h1>
+        <div class="settings row input-group">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Number of Tracks</span>
+                <input type="number" id="num-tracks" min="1" max="10" value="2">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Average Time for Train Length</span>
+                <input type="number" id="avg-time-on" min="1" max="10" value="2">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Average Time between Trains</span>
+                <input type="number" id="avg-time-between" min="1" max="10" value="2">
+            </div>
+            <div class="input-group">
+                <button class="btn btn-primary" id="start">Start Simulation</button>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <canvas id="graph"></canvas>
+        <div class="tracks"></div>
+    </div>
+<script src="index.bundle.js"></script></body>
+
+</html>
