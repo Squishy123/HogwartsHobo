@@ -64,7 +64,8 @@ export class SmartHobo {
                     if (this.avgTimesBetweenTot[i] == 0)
                         this.safety[i] = 0;
                     else
-                        this.safety[i] = poissSum(this.expTimesBetween[i], this.avgTimesBetween[i] / this.avgTimesBetweenTot[i]);
+                        this.safety[i] = 1 - poissSum(this.expTimesBetween[i], this.avgTimesBetween[i] / this.avgTimesBetweenTot[i]);
+               
                 } else {
                     if (this.avgTimesOnTracksTot[i] == 0)
                         this.safety[i] = 1;
@@ -141,7 +142,6 @@ export class SmartHobo {
     }
 
     jump(pos) {
-        console.log(chalk.magenta("JUMPING TO " + pos))
         this.pos = pos;
     }
 
@@ -151,7 +151,6 @@ export class SmartHobo {
         //console.log(chalk.yellow("CURRENT HP " + this.hp))
 
         if (this.safety) {
-            console.log("USING SAFETY FIRST");
             let max = this.safety[0];
             let maxIndex = 0;
             for (let i = 1; i < this.safety.length; i++) {

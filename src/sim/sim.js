@@ -11,8 +11,6 @@ export default class Game {
         this.hoboHP = hoboHP;
         this.numRounds = numRounds;
 
-        console.log(this);
-
         //generate distributions
         this.spawnDist = genPoissDist(timeStep / (avgTimeOnTrack + avgTimeBetween)); //number of events within the time step
         this.timeOnTrackDist = genPoissDist(avgTimeOnTrack); //train duration on track
@@ -65,6 +63,7 @@ export default class Game {
         let hoboPos = [];
         let trackPos = [];
         let hits = [];
+        let totalHits = 0;
 
         let hobo = new SmartHobo(this.hoboHP, 0);
         let score = 1;
@@ -72,7 +71,7 @@ export default class Game {
         for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
-                hits.push({ x: i, y: 1 });
+                hits.push({ x: i, y: ++totalHits});
                 hobo.hp--;
                 if (hobo.hp == 0)
                     break;
@@ -108,6 +107,7 @@ export default class Game {
         let hoboPos = [];
         let trackPos = [];
         let hits = [];
+        let totalHits = 0;
 
         let hobo = new Hobo(this.hoboHP, 0);
         let score = 1;
@@ -115,7 +115,7 @@ export default class Game {
         for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
-                hits.push({ x: i, y: 1 });
+                hits.push({ x: i, y: ++totalHits});
                 hobo.hp--;
                 if (hobo.hp == 0)
                     break;
@@ -133,3 +133,7 @@ export default class Game {
         };
     }
 }
+
+
+let b = new SmartHobo(100, 0);
+
