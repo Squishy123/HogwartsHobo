@@ -71,11 +71,13 @@ export default class Game {
         for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
-                hits.push({ x: i, y: ++totalHits});
+                totalHits++;
                 hobo.hp--;
                 if (hobo.hp == 0)
                     break;
             }
+            if (totalHits / i != 1)
+                hits.push({ x: i, y: (totalHits) / i });
             hobo.act(this.getInfo(i - 1));
             hoboPos.push({ x: i, y: hobo.pos });
             this.spawnNext();
@@ -115,11 +117,13 @@ export default class Game {
         for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
             if (this.getInfo(i)[hobo.pos] == 1) {
-                hits.push({ x: i, y: ++totalHits});
+                totalHits++;
                 hobo.hp--;
                 if (hobo.hp == 0)
                     break;
             }
+            if (totalHits / i != 1)
+                hits.push({ x: i, y: (totalHits) / i });
             hobo.act(this.getInfo(i - 1));
             hoboPos.push({ x: i, y: hobo.pos });
             this.spawnNext();

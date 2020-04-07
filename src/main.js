@@ -126,12 +126,20 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
                         suggestedMin: 0,
                         suggestedMax: numTracks + 1,
                         stepSize: 1
+                    },
+                    scaleLabel: {
+                        labelString: "Train Tracks",
+                        display: true
                     }
                 }],
                 xAxes: [{
                     ticks: {
                         suggestedMax: Math.max(basicResults.score, smartResults.score) + 10,
                         stepSize: 1
+                    },
+                    scaleLabel: {
+                        labelString: "Game Ticks",
+                        display: true
                     }
                 }]
             }
@@ -148,14 +156,14 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
                     borderColor: 'rgb(255, 179, 0)',
                     backgroundColor: 'rgba(0, 0, 0, 0)',
                     data: basicResults.hits,
-                    pointRadius: 5,
+                    pointRadius: 1,
                 },
                 {
                     label: "Smart Hobo Hit Rate",
                     borderColor: 'rgb(158, 255, 187)',
                     backgroundColor: 'rgba(0, 0, 0, 0)',
                     data: smartResults.hits,
-                    pointRadius: 5,
+                    pointRadius: 1,
                 },
             ]
         },
@@ -222,12 +230,20 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
                         suggestedMin: 0,
                         suggestedMax: numTracks + 1,
                         stepSize: 1
+                    },
+                    scaleLabel: {
+                        labelString: "Train Tracks",
+                        display: true
                     }
                 }],
                 xAxes: [{
                     ticks: {
                         suggestedMax: Math.max(basicResults.score, smartResults.score) + 10,
                         stepSize: 1
+                    },
+                    scaleLabel: {
+                        labelString: "Game Ticks",
+                        display: true
                     }
                 }]
             }
@@ -267,6 +283,10 @@ async function startOptimum(numTracks, hobohp, numRounds, numAvgs) {
                         suggestedMin: 0,
                         suggestedMax: 11,
                         stepSize: 1
+                    },
+                    scaleLabel: {
+                        labelString: "Average Time Between Trains",
+                        display: true
                     }
                 }],
                 xAxes: [{
@@ -274,6 +294,10 @@ async function startOptimum(numTracks, hobohp, numRounds, numAvgs) {
                         suggestedMin: 0,
                         suggestedMax: 11,
                         stepSize: 1
+                    },
+                    scaleLabel: {
+                        labelString: "Average Time On Tracks",
+                        display: true
                     }
                 }]
             }
