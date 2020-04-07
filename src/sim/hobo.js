@@ -62,13 +62,13 @@ export class SmartHobo {
             for (let i = 0; i < this.safety.length; i++) {
                 if (this.info[1][i] == 0) { //track is empty
                     if (this.avgTimesBetweenTot[i] == 0)
-                        this.safety[i] = 1;
-                    else 
-                        this.safety[i] = 1 - poissSum(this.expTimesBetween[i], this.avgTimesBetween[i] / this.avgTimesBetweenTot[i]);
+                        this.safety[i] = 0;
+                    else
+                        this.safety[i] = poissSum(this.expTimesBetween[i], this.avgTimesBetween[i] / this.avgTimesBetweenTot[i]);
                 } else {
                     if (this.avgTimesOnTracksTot[i] == 0)
                         this.safety[i] = 1;
-                    else 
+                    else
                         this.safety[i] = poissSum(this.expTimesOnTracks[i], this.avgTimesOnTracks[i] / this.avgTimesOnTracksTot[i]);
                 }
             }
@@ -128,15 +128,15 @@ export class SmartHobo {
                     }
                 }
             }
-            //console.log("TIMES ON TRACKS")
+           // console.log("TIMES ON TRACKS")
             //console.log(this.expTimesOnTracks);
-            //console.log(this.avgTimesOnTracks);
+            ///console.log(this.avgTimesOnTracks);
             //console.log("TIMES BETWEEN")
             //console.log(this.expTimesBetween);
             //console.log(this.avgTimesBetween);
             this.computeSafety();
             //console.log("SAFETY")
-            console.log(this.safety);
+            //console.log(this.safety);
         }
     }
 
@@ -151,17 +151,17 @@ export class SmartHobo {
         //console.log(chalk.yellow("CURRENT HP " + this.hp))
 
         if (this.safety) {
-            //console.log("USING SAFETY FIRST");
-            let min = this.safety[0];
-            let minIndex = 0;
-            for(let i = 1; i < this.safety.length; i++) {
-                if(this.safety[i] < min) {
-                    min = this.safety[i];
-                    minIndex = i;
+            console.log("USING SAFETY FIRST");
+            let max = this.safety[0];
+            let maxIndex = 0;
+            for (let i = 1; i < this.safety.length; i++) {
+                if (this.safety[i] > max) {
+                    max = this.safety[i];
+                    maxIndex = i;
                 }
             }
 
-            this.jump(minIndex);
+            this.jump(maxIndex);
 
         } else {
             //basic -> find an empty track jump to it

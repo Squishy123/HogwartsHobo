@@ -27,8 +27,12 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
     let smartResults = new Game(60, avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, numRounds).runSmart();
     let basicResults = new Game(60, avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, numRounds).runBasic();
 
+
     document.querySelector('#basic-score').innerHTML = `Basic Hobo Final Score: ${basicResults.score}`;
     document.querySelector('#smart-score').innerHTML = `Smart Hobo Final Score: ${smartResults.score}`;
+    document.querySelector('#smart-avg-time-on').innerHTML = `Computed Average Time On Track: ${smartResults.computedAvgTimeOnTrack}`;
+    document.querySelector('#smart-avg-time-between').innerHTML = `Computed Average Time Between: ${smartResults.computedAvgTimesBetween}`;
+
 
     let smartTrainPos = [];
     let basicTrainPos = [];
@@ -39,7 +43,7 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
                 smartTrainPos.push([]);
 
             if (smartResults.trackPos[i][j].y == 1)
-                smartTrainPos[j].push({ x: smartResults.trackPos[i][j].x, y: j });
+                smartTrainPos[j].push({ x: smartResults.trackPos[i][j].x, y: j + 1});
         }
     }
 
@@ -49,7 +53,7 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
                 basicTrainPos.push([]);
 
             if (basicResults.trackPos[i][j].y == 1)
-                basicTrainPos[j].push({ x: basicResults.trackPos[i][j].x, y: j });
+                basicTrainPos[j].push({ x: basicResults.trackPos[i][j].x, y: j + 1});
         }
     }
 
@@ -65,30 +69,33 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
                 },*/
                 {
                     label: "Basic Hobo Position",
-                    backgroundColor: 'rgba(245, 66, 164, 0.7)',
-                    data: basicResults.hoboPos,
+                    backgroundColor: 'rgba(255, 179, 0, 0.7)',
+                    data: basicResults.hoboPos.map((p) => ({x: p.x, y: p.y+1})),
                     pointRadius: 7
                 },
                 ...basicTrainPos.map((tp, i) => ({
-                    label: `Track ${i}`,
-                    backgroundColor: "rgb(66, 245, 167)",
+                    label: `Track ${i + 1}`,
+                    backgroundColor: "#5b6d85",
                     data: tp,
                     pointRadius: 10
                 })),
             ]
         },
         options: {
+            legend: {
+                padding: 10
+            },
             scales: {
                 yAxes: [{
                     ticks: {
                         suggestedMin: 0,
-                        suggestedMax: numTracks,
+                        suggestedMax: numTracks + 1,
                         stepSize: 1
                     }
                 }],
                 xAxes: [{
                     ticks: {
-                        suggestedMax: Math.max(basicResults.score, smartResults.score),
+                        suggestedMax: Math.max(basicResults.score, smartResults.score) + 10,
                         stepSize: 1
                     }
                 }]
@@ -107,30 +114,33 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
                 },*/
                 {
                     label: "Smart Hobo Position",
-                    backgroundColor: 'rgba(245, 66, 164, 0.7)',
-                    data: smartResults.hoboPos,
+                    backgroundColor: 'rgba(158, 255, 187, 0.7)',
+                    data: smartResults.hoboPos.map((p) => ({x: p.x, y: p.y+1})),
                     pointRadius: 7
                 },
                 ...smartTrainPos.map((tp, i) => ({
-                    label: `Track ${i}`,
-                    backgroundColor: "rgb(66, 245, 167)",
+                    label: `Track ${i + 1}`,
+                    backgroundColor: "#5b6d85",
                     data: tp,
                     pointRadius: 10
                 })),
             ]
         },
         options: {
+            legend: {
+                padding: 10
+            },
             scales: {
                 yAxes: [{
                     ticks: {
                         suggestedMin: 0,
-                        suggestedMax: numTracks,
+                        suggestedMax: numTracks + 1,
                         stepSize: 1
                     }
                 }],
                 xAxes: [{
                     ticks: {
-                        suggestedMax: Math.max(basicResults.score, smartResults.score),
+                        suggestedMax: Math.max(basicResults.score, smartResults.score) + 10,
                         stepSize: 1
                     }
                 }]
@@ -138,6 +148,14 @@ function startSimulation(avgTimeOnTrack, avgTimesBetween, numTracks, hobohp, num
         }
     });
 
+}
+
+async function findOptimum() {
+    for(let x = 0; x < 10; x++) {
+        for(let y = 0; y < 10; y++) {
+
+        }
+    }
 }
 
 
