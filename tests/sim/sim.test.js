@@ -1,6 +1,6 @@
 import { poiss, fact, randInt, genPoissDist, weightedRand } from "../../src/sim/helper";
 import { Hobo } from "../../src/sim/hobo"
-import { Game } from "../../src/sim/sim"
+import Game from "../../src/sim/sim"
 test('1', () => {
     expect(1).toBe(1);
   });
@@ -135,13 +135,13 @@ function inRange(n, lower, upper){
 });
 
 test('Hobo guaranteed damage on single track', () => {
-    let game = new Game(60, 5, 3, 1);
-    game.runBasicCycles(50)
-    expect(game.hobo.hp < 20).toBe(true)
+    let game = new Game(60, 5, 3, 1, 20, 50);
+    game.runBasic()
+    expect(game.hobo.hp <= 20).toBe(true)
 });
 
 test('Short term game run without crash', () => {
-    let game = new Game(60, 5, 3, 3);
-    game.runBasicCycles(100)
+    let game = new Game(60, 5, 3, 3, 10, 100);
+    game.runBasic()
     expect(true).toBe(true)
 });

@@ -65,35 +65,35 @@ export default class Game {
         let hits = [];
         let totalHits = 0;
 
-        let hobo = new SmartHobo(this.hoboHP, 0);
+        this.hobo = new SmartHobo(this.hoboHP, 0);
         let score = 1;
         this.spawnNext();
         for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
-            if (this.getInfo(i)[hobo.pos] == 1) {
+            if (this.getInfo(i)[this.hobo.pos] == 1) {
                 totalHits++;
-                hobo.hp--;
-                if (hobo.hp == 0)
+                this.hobo.hp--;
+                if (this.hobo.hp == 0)
                     break;
             }
             if (totalHits / i != 1)
                 hits.push({ x: i, y: (totalHits) / i });
-            hobo.act(this.getInfo(i - 1));
-            hoboPos.push({ x: i, y: hobo.pos });
+            this.hobo.act(this.getInfo(i - 1));
+            hoboPos.push({ x: i, y: this.hobo.pos });
             this.spawnNext();
         }
 
         let computedAvgTimeOnTrack = 0;
-        for (let i = 0; i < hobo.avgTimesOnTracks.length; i++) {
-            computedAvgTimeOnTrack += hobo.avgTimesOnTracks[i] / hobo.avgTimesOnTracksTot[i];
+        for (let i = 0; i < this.hobo.avgTimesOnTracks.length; i++) {
+            computedAvgTimeOnTrack += this.hobo.avgTimesOnTracks[i] / this.hobo.avgTimesOnTracksTot[i];
         }
-        computedAvgTimeOnTrack /= hobo.avgTimesOnTracks.length;
+        computedAvgTimeOnTrack /= this.hobo.avgTimesOnTracks.length;
 
         let computedAvgTimesBetween = 0;
-        for (let i = 0; i < hobo.avgTimesBetween.length; i++) {
-            computedAvgTimesBetween += hobo.avgTimesBetween[i] / hobo.avgTimesBetweenTot[i];
+        for (let i = 0; i < this.hobo.avgTimesBetween.length; i++) {
+            computedAvgTimesBetween += this.hobo.avgTimesBetween[i] / this.hobo.avgTimesBetweenTot[i];
         }
-        computedAvgTimesBetween /= hobo.avgTimesBetween.length;
+        computedAvgTimesBetween /= this.hobo.avgTimesBetween.length;
 
         return {
             computedAvgTimeOnTrack: computedAvgTimeOnTrack,
@@ -111,21 +111,21 @@ export default class Game {
         let hits = [];
         let totalHits = 0;
 
-        let hobo = new Hobo(this.hoboHP, 0);
+        this.hobo = new Hobo(this.hoboHP, 0);
         let score = 1;
         this.spawnNext();
         for (let i = 1; i < this.numRounds; i++, score++) {
             trackPos.push(this.getInfo(i).map((val) => ({ x: i, y: val })))
-            if (this.getInfo(i)[hobo.pos] == 1) {
+            if (this.getInfo(i)[this.hobo.pos] == 1) {
                 totalHits++;
-                hobo.hp--;
-                if (hobo.hp == 0)
+                this.hobo.hp--;
+                if (this.hobo.hp == 0)
                     break;
             }
             if (totalHits / i != 1)
                 hits.push({ x: i, y: (totalHits) / i });
-            hobo.act(this.getInfo(i - 1));
-            hoboPos.push({ x: i, y: hobo.pos });
+            this.hobo.act(this.getInfo(i - 1));
+            hoboPos.push({ x: i, y: this.hobo.pos });
             this.spawnNext();
         }
 
