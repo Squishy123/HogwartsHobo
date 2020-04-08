@@ -55,3 +55,5 @@ npm run test
 ### 🙊 Christian Wang aka [Squishy123](https://github.com/Squishy123) => i wrote some spaghetti code and did the results report
 
 ### 🦖 Elijah Tungul aka [elijah-t](https://github.com/elijah-t) => Co-wrote the Product Backlog along with Miguel Nobre
+
+### :fish: Derek Lee aka [SeaBreamQueen](https://github.com/SeaBreamQueen) => Tests and test report
