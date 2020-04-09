@@ -52,7 +52,7 @@ npm run test
 
 ## Contributors
 
-### 🙊 Christian Wang aka [Squishy123](https://github.com/Squishy123) => i wrote some spaghetti code and did the results report
+### 🙊 Christian Wang aka [Squishy123](https://github.com/Squishy123) => Wrote the spaghetti code and did the results report
 
 ### 🦖 Elijah Tungul aka [elijah-t](https://github.com/elijah-t) => Co-wrote the Product Backlog along with Miguel Nobre
 
