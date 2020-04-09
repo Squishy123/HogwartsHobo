@@ -60,4 +60,4 @@ npm run test
 
 ### :frog: Miguel Nobre aka [MiggySmallz](https://github.com/MiggySmallz) => Co-wrote the Product Backlog along with Elijah Tungul
 
-### :pig: Jason Zhu aka [Evandel](https://github.com/Evandel) => Edited the reports 
+### :pig: Jason Zhu aka [Evandel](https://github.com/Evandel) => Edited the reports <s>and is gonna buy the celebratory pizza & pop</s>
