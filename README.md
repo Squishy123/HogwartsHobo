@@ -58,4 +58,6 @@ npm run test
 
 ### :fish: Derek Lee aka [SeaBreamQueen](https://github.com/SeaBreamQueen) => Tests and test report
 
-### :frog: Miguel Nobre aka https://github.com/MiggySmallz => Co-wrote the Product Backlog along with Elijah Tungul
+### :frog: Miguel Nobre aka [MiggySmallz](https://github.com/MiggySmallz) => Co-wrote the Product Backlog along with Elijah Tungul
+
+### :pig: Jason Zhu aka [Evandel](https://github.com/Evandel) => Edited the reports 
